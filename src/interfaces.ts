@@ -1,9 +1,7 @@
 export interface iQuestion {
-    id: string;
+    id: number;
     question: string;
-    correct_ans: string;
-    ans1: string;
-    ans2: string;
-    ans3: string;
-    category: string;
+    correct_ans: number;
 }
+
+

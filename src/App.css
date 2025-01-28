@@ -149,6 +149,9 @@
   border-radius: 5px;
   width: 60px;
   height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lower{
@@ -158,9 +161,29 @@
   line-height: 54px;
 }
 
+.flex{
+  display: flex;
+}
+
+.row{
+  flex-direction: row;
+}
+
+.tick{
+  background-color: rgb(57, 90, 7);
+  color: white;
+  height: 50px;
+width: 50px;
+margin-top: 10px;
+}
+
+.x{
+  background-color: red;
+}
+
 .questionInput{
   width: 350px;
-  height: 40px;
+  height: 20px;
   border-radius: 100px;
   background-color: rgb(193, 193, 193);
   text-align: left;
@@ -171,7 +194,7 @@
   cursor: pointer;
   transition: .5s;
   border: none;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .questionInput:hover{

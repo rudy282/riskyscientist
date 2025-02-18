@@ -16,6 +16,7 @@ const supabase = createClient(url, key);
 
 function App() {
     const [questions, setQuestions] = useState<iQuestion[]>([]);
+    const [selectedCard, setCard] = useState<number>(0);
     const [thisPlayer, setThisPlayer] = useState<Player>(
         new Player(5, "thisPlayer", 1000)
     );
@@ -48,7 +49,6 @@ function App() {
             if (element) {
                 element.style.display = "none";
                 players.map((player) => {
-                    console.log(currentQuestion.correct_ans);
                     player.randomAnswer(currentQuestion?.correct_ans);
                     setAnswers(
                         [...players, thisPlayer].sort(
@@ -66,12 +66,27 @@ function App() {
         getQuestions();
     }, []);
 
+    const handleCardSelect = (id:number) =>{
+        let card = document.getElementById(`cardSlot${id}`)
+        document.querySelectorAll<HTMLElement>('.cardsSlot').forEach((el) => {
+            el.style.border = ''; // Resetujemy obramowanie dla wszystkich
+            setCard(0)
+        });
+
+        if(card){
+            console.log(card.style.border)
+            card.style.border = '2px solid blue !important';
+            console.log(card.style.border)
+            setCard(id)
+        }
+    }
+    
+
     async function getQuestions() {
         const response: PostgrestSingleResponse<iQuestion[]> = await supabase
             .from("questions")
             .select();
         setQuestions(response.data || []);
-        console.log(response.data);
         if (response.data) {
             setCurrentQuestion(response.data[0]);
         }
@@ -89,6 +104,8 @@ function App() {
 
     return (
         <>
+            <div className={"winResult " + "winner"} style={{zIndex:1000}}>Winner | Loser</div>
+        <span style={{zIndex: 100}}>
             <div className="title">Ryzykowany naukowiec</div>
             <div className="table">
                 <div className="player1 player">
@@ -128,20 +145,19 @@ function App() {
                 <div className="cardsContainer">
                     {answers[1] ? (
                         answers.map((record) => {
-                            console.log(answers);
                             return (
-                                <div className={"cardSlot player" + record.id}>
+                                <div style={{border: record.id==selectedCard ? "3px dashed blue" :"3px dashed white"}} className={"cardSlot player" + record.id} id={"cardSlot" + record.id} onClick={()=>handleCardSelect(record.id)}>
                                     {record.currentAnswer}
                                 </div>
                             );
                         })
                     ) : (
                         <>
-                            <div className="cardSlot"></div>
-                            <div className="cardSlot"></div>
-                            <div className="cardSlot"></div>
-                            <div className="cardSlot"></div>
-                            <div className="cardSlot"></div>
+                            <div className="cardSlot" ></div>
+                            <div className="cardSlot" ></div>
+                            <div className="cardSlot" ></div>
+                            <div className="cardSlot" ></div>
+                            <div className="cardSlot" ></div>
                         </>
                     )}
                     <div className="lower">Lower</div>
@@ -194,11 +210,14 @@ function App() {
                             onChange={(e) => {
                                 setBet(+e.target.value);
                             }}
-                        />
-                        <button onClick={submitCash}>submit cash</button>
+                        /><button onClick={submitCash} disabled={selectedCard === 0}>
+                        Submit Cash
+                      </button>
+                      
                     </>
                 )}
             </div>
+        </span>
         </>
     );
 }
